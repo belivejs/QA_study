@@ -1,0 +1,22 @@
+# GitHub Actions 화면에 표시되는 워크플로 이름입니다.
+name: Test CI
+
+# main 브랜치에 push될 때 워크플로를 실행합니다.
+on:
+  push:
+    branches: [main]
+
+# jobs 아래에 실행할 작업(test, notify)을 정의합니다.
+jobs:
+  slack_notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Slack 알림 보내기
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          curl --fail --silent --show-error \
+            --request POST \
+            --header "Content-Type: application/json" \
+            --data '{"text":"Github Actions 메시지 테스트"}' \
+            "$SLACK_WEBHOOK_URL"
